@@ -1,44 +1,60 @@
-pipeline {
-  agent any
-  
-  stages {
-    stage('first') {
-      steps {
-        echo 'first, non-parallel stage'
-      }
-    }
+String Branch = "BF74"
+String ProcessChoices = ["None", "Debug", "Release", "Debug and Release", "Release and Publish", "All"].join("\n")
 
-    stage('top-parallel') {
-      steps{
-        echo 'top-parallel'
-      }
-      stages {
-        stage('first-parallel') {
-          steps {
-            echo 'First of the parallel stages without further nesting'
-            sleep 60
-          }
-        }
-        stage('second-parallel') {
-          steps{
-            echo 'second-parallel'
-          }
-          stages {
-            stage('first-nested-parallel') {
-              steps {
-                 echo 'the first of the nested parallel stages'
-                 sleep 30
-              }
-           }
-           stage('second-nested-parallel') {
-              steps {
-                 echo 'the second of the nested parallel stages'
-                 sleep 30
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+def Test(String Workspace, String Branch) {
+   echo "TEST ${Workspace} ${Branch}"
+}
+
+def Build(String Workspace, String Branch, String Product, String Mode) {
+   echo "BUILD ${Workspace} ${Branch} ${Product} ${Mode}"
+}
+
+def Publish(String Workspace, String Branch, String Product) {
+   echo "PUBLISH ${Workspace} ${Branch} ${Product}"
+}
+
+pipeline {
+   agent any
+
+      environment {
+       DebugPattern = "Debug|Debug and Release|All"
+       ReleasePattern = "Release|Debug and Release|Release and Publish|Release and Test|All"
+       TestPattern = "Release and Test|All"
+       PublishPattern = "Release and Publish|All"
+   }
+
+   parameters {
+       choice(name: 'Process', choices: ProcessChoices)
+   }
+
+   stages {
+       stage ('build base') {
+           when { expression { params.Process.matches(env.ReleasePattern)}}
+           steps { Build(Workspace, Branch, "Products.Base", "Modes.Release")}
+       }
+
+       stage ('parallel') {
+           parallel {
+               stage ("test base") { 
+                   when { expression { params.Process.matches(env.TestPattern)}} 
+                   steps { Test(WORKSPACE, env.Branch) }
+               } 
+               stage ("process products") { steps { script {
+                   //A has no dependencies
+                   if (params.Process.matches(env.DebugPattern))    Build(WORKSPACE, Branch, "Products.A", "Modes.Debug")
+                   if (params.Process.matches(env.ReleasePattern))  Build(WORKSPACE, Branch, "Products.A", "Modes.Release")
+                   if (params.Process.matches(env.PublishPattern))  Publish(WORKSPACE, Branch, "Products.A")
+                   //B requires A
+                   if (params.Process.matches(env.DebugPattern))    Build(WORKSPACE, Branch, "Products.B", "Modes.Debug")
+                   if (params.Process.matches(env.ReleasePattern))  Build(WORKSPACE, Branch, "Products.B", "Modes.Release")
+                   if (params.Process.matches(env.PublishPattern))  Publish(WORKSPACE, Branch, "Products.B")
+                   //C requires B
+                   if (params.Process.matches(env.DebugPattern))    Build(WORKSPACE, Branch, "Products.C", "Modes.Debug")
+                   if (params.Process.matches(env.ReleasePattern))  Build(WORKSPACE, Branch, "Products.C", "Modes.Release")
+                   if (params.Process.matches(env.PublishPattern))  Publish(WORKSPACE, Branch, "Products.C")
+
+               }}}
+           } 
+       }
+   }
 }
