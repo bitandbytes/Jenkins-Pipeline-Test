@@ -17,16 +17,22 @@ pipeline {
         stage('Sys Start T1') {
           steps {
             echo 'Hello World'
+            sleep 30
+            T1_STATUS = 'SUCCESS'
           }
         }
         stage('Sys Start T2') {
           steps {
             echo 'Sys Start T2'
+            sleep 10
+            T2_STATUS = 'SUCCESS'
           }
         }
         stage('Sts Start T3') {
           steps {
             echo 'Sys Start T3'
+            sleep 50
+            T3_STATUS = 'SUCCESS'
           }
         }
       }
@@ -34,16 +40,31 @@ pipeline {
     stage('Tests') {
       parallel {
         stage('T1') {
+          when{
+            expression{
+              T1_STATUS == 'SUCCESS'
+            }
+          }
           steps {
             echo 'T1'
           }
         }
         stage('T2') {
+          when{
+            expression{
+              T2_STATUS == 'SUCCESS'
+            }
+          }
           steps {
             echo 'T2'
           }
         }
         stage('T3') {
+          when{
+            expression{
+              T3_STATUS == 'SUCCESS'
+            }
+          }
           steps {
             echo 'T3'
           }
