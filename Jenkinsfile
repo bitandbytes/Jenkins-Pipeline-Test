@@ -1,16 +1,45 @@
-
 pipeline {
-    agent any
-    stages {
-        stage('Example') {
-            steps {
-                echo 'Hello World'
-            }
+  agent any
+  stages {
+    stage('Sys Start') {
+      parallel {
+        stage('Sys Start T1') {
+          steps {
+            echo 'Hello World'
+          }
         }
-    }
-    post { 
-        always { 
-            echo 'I will always say Hello again!'
+        stage('Sys Start T2') {
+          steps {
+            echo 'Sys Start T2'
+          }
         }
+      }
     }
+    stage('Tests') {
+      parallel {
+        stage('T1') {
+          steps {
+            echo 'T1'
+          }
+        }
+        stage('T2') {
+          steps {
+            echo 'T2'
+          }
+        }
+        stage('T3') {
+          steps {
+            echo 'T3'
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      echo 'I will always say Hello again!'
+      
+    }
+    
+  }
 }
