@@ -29,8 +29,10 @@ pipeline {
                  echo 'the second of the nested parallel stages'
                  sleep 30
               }
-           }
+            }
+          }
         }
-     }
+      }
+    }
   }
 }
