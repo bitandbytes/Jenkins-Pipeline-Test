@@ -1,4 +1,7 @@
 pipeline {
+  environment {
+    AGENT_INFO = ''
+  }
   agent {
     node {
       label 'ccpd8'
@@ -28,7 +31,5 @@ pipeline {
       }
     }
   }
-  environment {
-    AGENT_INFO = ''
-  }
+  
 }
