@@ -45,6 +45,11 @@ pipeline {
       }
     }
   }
+  environment {
+    T1_STATUS = 'ERR'
+    T2_STATUS = 'ERR'
+    T3_STATUS = 'ERR'
+  }
   post {
     always {
       echo 'I will always say Hello again!'
