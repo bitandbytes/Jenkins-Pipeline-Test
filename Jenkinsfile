@@ -19,21 +19,18 @@ pipeline {
           steps {
             echo 'Hello World'
             sleep 30
-            env.T1_STATUS = 'SUCCESS'
           }
         }
         stage('Sys Start T2') {
           steps {
             echo 'Sys Start T2'
             sleep 15
-            env.T2_STATUS = 'SUCCESS'
           }
         }
         stage('Sts Start T3') {
           steps {
             echo 'Sys Start T3'
             sleep 45
-            env.T3_STATUS = 'SUCCESS'
           }
         }
       }
