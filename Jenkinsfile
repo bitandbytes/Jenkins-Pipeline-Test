@@ -9,6 +9,9 @@ pipeline {
     }
 
     stage('top-parallel') {
+      steps{
+        echo 'top-parallel'
+      }
       stages {
         stage('first-parallel') {
           steps {
@@ -17,6 +20,9 @@ pipeline {
           }
         }
         stage('second-parallel') {
+          steps{
+            echo 'second-parallel'
+          }
           stages {
             stage('first-nested-parallel') {
               steps {
