@@ -4,6 +4,12 @@ pipeline {
       label 'master'
     }
     
+   environment {
+    T1_STATUS = 'ERR'
+    T2_STATUS = 'ERR'
+    T3_STATUS = 'ERR'
+  }
+    
   }
   stages {
     stage('Sys Start') {
@@ -44,11 +50,6 @@ pipeline {
         }
       }
     }
-  }
-  environment {
-    T1_STATUS = 'ERR'
-    T2_STATUS = 'ERR'
-    T3_STATUS = 'ERR'
   }
   post {
     always {
