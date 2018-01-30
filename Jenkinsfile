@@ -4,12 +4,6 @@ pipeline {
       label 'master'
     }
     
-   environment {
-    T1_STATUS = 'ERR'
-    T2_STATUS = 'ERR'
-    T3_STATUS = 'ERR'
-  }
-    
   }
   stages {
     stage('Sys Start') {
@@ -17,22 +11,16 @@ pipeline {
         stage('Sys Start T1') {
           steps {
             echo 'Hello World'
-            sleep 30
-            T1_STATUS = 'SUCCESS'
           }
         }
         stage('Sys Start T2') {
           steps {
             echo 'Sys Start T2'
-            sleep 10
-            T2_STATUS = 'SUCCESS'
           }
         }
         stage('Sts Start T3') {
           steps {
             echo 'Sys Start T3'
-            sleep 50
-            T3_STATUS = 'SUCCESS'
           }
         }
       }
