@@ -18,6 +18,11 @@ pipeline {
             echo 'Sys Start T2'
           }
         }
+        stage('Sts Start T3') {
+          steps {
+            echo 'Sys Start T3'
+          }
+        }
       }
     }
     stage('Tests') {
