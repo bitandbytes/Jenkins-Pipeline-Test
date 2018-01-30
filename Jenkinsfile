@@ -40,31 +40,16 @@ pipeline {
     stage('Tests') {
       parallel {
         stage('T1') {
-          when{
-            expression{
-              T1_STATUS == 'SUCCESS'
-            }
-          }
           steps {
             echo 'T1'
           }
         }
         stage('T2') {
-          when{
-            expression{
-              T2_STATUS == 'SUCCESS'
-            }
-          }
           steps {
             echo 'T2'
           }
         }
         stage('T3') {
-          when{
-            expression{
-              T3_STATUS == 'SUCCESS'
-            }
-          }
           steps {
             echo 'T3'
           }
